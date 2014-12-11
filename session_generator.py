@@ -8,9 +8,9 @@ class Application():
     "Basic session generator"
     def __init__(self):
         # Variables initialisation
-	self.flags = [False, False, False, False, False] # Time, Text, Duration, Encoding, Save 
+	self.flags = [False, False, False, False, False, False, False] # Time, Text, Duration, Encoding, Concatenate, Order, Save 
 	self.supportEncoding = ['base64', 'md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512', 'all']
-        self.time, self.text, self.duration, self.encoding, self.destination = [], [], 0, [], ""
+        self.time, self.text, self.duration, self.encoding, self.order, self.destination = [], [], 0, [], [], ""
 
         #Parser initialisation
         self.parser = argparse.ArgumentParser(description='Basic session generator')
@@ -19,7 +19,9 @@ class Application():
         self.parser.add_argument('-t', action="store", dest="text", help="Text(s) to encode", nargs='+')
         self.parser.add_argument('-d', action="store", dest="duration", help="Duration after the start time in minutes.", type=int, nargs=1)
         self.parser.add_argument('-e', action="store", dest="encoding", help="Enconding wished. Currently support : 'base64', 'md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512'. Type 'all' to use them all this order. By default : None", nargs='+')
-        self.parser.add_argument('-s', action="store", dest="destination", help="File used to save the output", nargs=1)
+        self.parser.add_argument('-c', action="store_true", default=False, dest="concatenate", help="Set the contenation to true.") 
+        self.parser.add_argument('-o', action='store', dest="order", help="Set the order for the concatenation when you use time and text together. Type 'text' and 'time' in the order you want to concatenate them.", nargs="+")
+        self.parser.add_argument('-s', action="store", dest="destination", help="File to save the output", nargs=1)
 
         if len(sys.argv)==1:
             self.parser.print_help()
@@ -44,9 +46,14 @@ class Application():
         if args.encoding != None:
             self.encoding = list(args.encoding)
 	    self.flags[3] = True
+	if args.order != None:
+            self.order = list(args.order)
+            self.flags[5] = True
         if args.destination != None:
             self.destination = args.destination
-	    self.flags[4] = True
+	    self.flags[6] = True
+
+	self.flags[4] = args.concatenate
         
         self.main()
 
@@ -70,13 +77,28 @@ class Application():
 		for time in timeList_start:
 		    timeList_duration.append(self.getTimeDuration(time))
 
-	# Texte without encoding
+	# Text without encoding
 	elif self.flags[1] and not self.flags[3]:
 	    self.displayError("Please select an encoding or type '-e all'\n")
 
 	# Duration without time
 	elif self.flags[2]:
-	    displayError("You need to type a datetime. Type '-T current' to use the current time.\n")
+	    self.displayError("You need to type a datetime. Type '-T current' to use the current time.\n")
+
+        # Check the contenation 
+	if self.flags[5] and not self.flags[4]:
+            self.displayError("You have to activate the concatenation before setting an order.\n")
+
+        if self.flags[5] and not self.flags[0] or not self.flags[1]:
+            self.displayError("You must use text and time together to set an order.\n")
+
+        if self.flags[5]:
+            if len(self.order) != self.order.count('time') + self.order.count('text'):
+                self.displayError("Type only 'time' and 'text' to set the order.\n")
+            elif len(self.order) != len(self.text) + len(self.time):
+                self.displayError("You have to type as many position chains as input.\n")
+            elif len(self.text) != self.order.count('text') or len(self.time) != self.order.count('time'):
+                self.displayError("You have to type as many 'text' in the order as text input and as many 'time' in the order as time input.\n")
 
 	# Text without time
 	elif self.flags[1] and not self.flags[0]:
@@ -124,6 +146,8 @@ class Application():
 			for time in timeList_duration[0]:
 			    for code in self.encoding:
 		                textList_hash.append(self.encoder(time, code))
+
+        # Date with text
 
 	print textList_hash
 	    
