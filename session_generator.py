@@ -4,23 +4,26 @@ import sys, argparse
 import time, datetime
 import base64, hashlib
 
-class Application():
+class SessionGenerator():
     "Basic session generator"
     def __init__(self):
         # Variables initialisation
-	self.flags = [False, False, False, False, False, False] # Time, Text, Duration, Cooie-friendly, Encoding, Save 
+	self.flags = [False, False, False, False, False, False, False] # Time, Text, Duration, Cookie-friendly, Encoding, Save, File 
 	self.supportEncoding = ['base64', 'md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512', 'all']
-        self.time, self.text, self.duration, self.encoding, self.destination = [], [], 0, [], ""
+        self.time, self.text, self.duration, self.encoding, self.destination, self.file = [], [], 0, [], "", []
 
         #Parser initialisation
         self.parser = argparse.ArgumentParser(description='Basic session generator')
 
-        self.parser.add_argument('-T', action="store", dest="time", help="Time(s) to encode, format -> d/m/y h:min:s Or type 'current' to use the current time", nargs='+')
+        self.parser.add_argument('-F', action="store", dest="file", help="File(s) to encode.", nargs='+') 
         self.parser.add_argument('-t', action="store", dest="text", help="Text(s) to encode", nargs='+')
+        self.parser.add_argument('-T', action="store", dest="time", help="Time(s) to encode, format -> d/m/y h:min:s Or type 'current' to use the current time", nargs='+')
         self.parser.add_argument('-d', action="store", dest="duration", help="Duration after the start time in minutes.", type=int, nargs=1)
         self.parser.add_argument('-e', action="store", dest="encoding", help="Enconding wished. Currently support : 'base64', 'md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512'. Type 'all' to use them all this order. By default : None", nargs='+')
         self.parser.add_argument('-cf', action="store_true", default=False, dest="cookie_friendly", help="The output will be cookie friendly.") 
         self.parser.add_argument('-s', action="store", dest="destination", help="File to save the output", nargs=1)
+
+        self.parser.add_argument('--version', action='version', version='%(prog)s 1.0')
 
         if len(sys.argv)==1:
             self.parser.print_help()
@@ -48,6 +51,9 @@ class Application():
         if args.destination != None:
             self.destination = args.destination[0]
 	    self.flags[5] = True
+	if args.file != None:
+            self.file = list(args.file)
+            self.flags[6] = True
 
 	self.flags[4] = args.cookie_friendly
         
@@ -83,8 +89,8 @@ class Application():
                         for code in self.encoding:
                             textList_hash.append(self.encoder(time, code))
 
-	# Text without encoding
-	elif self.flags[1] and not self.flags[3]:
+	# Text without encoding or file without encoding
+	elif (self.flags[1] or self.flags[6]) and not self.flags[3]:
 	    self.displayError("Please select an encoding or type '-e all'\n")
 
 	# Duration without time
@@ -96,6 +102,15 @@ class Application():
             for text in self.text:
                 for code in self.encoding:
                     textList_hash.append(self.encoder(text, code))
+
+        # File
+        if self.flags[6]:
+            for file in self.file:
+                f = open(file, 'r')
+                for line in f:
+                    for code in self.encoding:
+                        textList_hash.append(self.encoder(line, code))
+                f.close()
         
 	# Save or display the output
 	if self.flags[5]:
@@ -181,4 +196,4 @@ class Application():
 
 # Programme de test
 if __name__ == "__main__":
-    app = Application()
+    app = SessionGenerator()
