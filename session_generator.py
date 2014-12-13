@@ -117,7 +117,7 @@ class SessionGenerator():
                     f = open(file, 'r')
                     for line in f:
                         for code in self.encoding:
-                            textList_hash.append(self.encoder(line, code))
+                            textList_hash.append(self.encoder(str(line).strip('\n'), code))
                     f.close()
                 except:
                     self.displayError("No such file or directory: " + file + "\n")
