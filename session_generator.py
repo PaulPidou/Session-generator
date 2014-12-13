@@ -64,6 +64,7 @@ class SessionGenerator():
 	timeList_start = [] # List of timestamp (from the input)
 	timeList_duration = [] # List of timestamp (from the input with duration)
 	textList_hash = [] # List of hash
+	tempList = []
 
 	# Date
 	if self.flags[0]:
@@ -92,9 +93,14 @@ class SessionGenerator():
                         
             else:
                 if timeList_duration:
-                    textList_hash = list(timeList_duration)
+                    for timeList in timeList_duration:
+                        for time in timeList:
+                            tempList.append(str(time))
+                    textList_hash.append(tempList)
                 else:
-                    textList_hash = list(timeList_start)
+                    for time in timeList_start:
+                        tempList.append(str(time))
+                    textList_hash.append(tempList)
 
 	# Text without encoding or file without encoding
 	elif (self.flags[1] or self.flags[6]) and not self.flags[3]:
