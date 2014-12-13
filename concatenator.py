@@ -46,7 +46,8 @@ class Concatenator():
     def main(self):
         "Main function"
         concatenateText, concatenateList, filesList, tempList = "", [], [], []
-        outputLength, filesSize, nbFiles = 1, [], len(self.file)
+        outputLength, filesSize, nbFiles, lineIt = 1, [], len(self.file), []
+        j = 0
 
         # Check if there is at least two entries to concatenate
         if len(self.text) + len(self.file) < 2:
@@ -78,13 +79,24 @@ class Concatenator():
                 for size in filesSize:
                     outputLength *= size
 
-                print outputLength, filesSize
+                for index in range(nbFiles):
+                    lineIt.append(self.nbCall(filesSize, index))
 
-
+                # Initialisation of the output
                 for i in range(outputLength):
-                    for j in range(nbFiles):
-                    conctanenateList.append(
-                    
+                    concatenateList.append("")
+
+                 # Concatenation                   
+                for n in range(nbFiles):
+                    for i in range(outputLength):
+                        if i%lineIt[n] == 0:
+                            concatenateList[i] += filesList[n][j]
+                            j += 1
+
+                            if j == filesSize[n]:
+                                j = 0
+                        else:
+                            concatenateList[i] += filesList[n][j]
 
 
         # Save or display the output
@@ -93,6 +105,13 @@ class Concatenator():
         else:
 	    for text in concatenateList:
                 print text
+
+    def nbCall(self, filesSize, index):
+        if index == 0:
+            return 1
+        else:
+            return filesSize[index-1] * self.nbCall(filesSize, index-1)
+
 
     def saveOutput(self, textList_hash):
         myFile = open(self.destination, "w")
