@@ -106,11 +106,14 @@ class SessionGenerator():
         # File
         if self.flags[6]:
             for file in self.file:
-                f = open(file, 'r')
-                for line in f:
-                    for code in self.encoding:
-                        textList_hash.append(self.encoder(line, code))
-                f.close()
+                try:
+                    f = open(file, 'r')
+                    for line in f:
+                        for code in self.encoding:
+                            textList_hash.append(self.encoder(line, code))
+                    f.close()
+                except:
+                    self.displayError("No such file or directory: " + file + "\n")
         
 	# Save or display the output
 	if self.flags[5]:
