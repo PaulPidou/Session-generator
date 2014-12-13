@@ -81,13 +81,20 @@ class SessionGenerator():
 
 	    if self.flags[3]: # Encoding
                 if timeList_duration:
-                    for time in timeList_duration:
-                        for code in self.encoding:
-                            textList_hash.append(self.encoder(time, code))
+                    for timeList in timeList_duration:
+                        for time in timeList:
+                            for code in self.encoding:
+                                textList_hash.append(self.encoder(time, code))
                 else:
                     for time in timeList_start:
                         for code in self.encoding:
                             textList_hash.append(self.encoder(time, code))
+                        
+            else:
+                if timeList_duration:
+                    textList_hash = list(timeList_duration)
+                else:
+                    textList_hash = list(timeList_start)
 
 	# Text without encoding or file without encoding
 	elif (self.flags[1] or self.flags[6]) and not self.flags[3]:
