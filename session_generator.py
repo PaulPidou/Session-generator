@@ -13,7 +13,7 @@ class SessionGenerator():
         self.time, self.text, self.duration, self.encoding, self.destination, self.file = [], [], 0, [], "", []
 
         #Parser initialisation
-        self.parser = argparse.ArgumentParser(description='Basic session generator')
+        self.parser = argparse.ArgumentParser(description='Basic session generator', epilog="Developed by Paul Pidou. More information and examples on https://github.com/PaulPidou/Session-generator")
 
         self.parser.add_argument('-F', action="store", dest="file", help="File(s) to encode.", nargs='+') 
         self.parser.add_argument('-t', action="store", dest="text", help="Text(s) to encode", nargs='+')

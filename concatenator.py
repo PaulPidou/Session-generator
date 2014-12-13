@@ -9,7 +9,7 @@ class Concatenator():
         self.flags = [False, False, False, False] # Text, File, Order, Save
 
         #Parser initialisation
-        self.parser = argparse.ArgumentParser(description='Basic concatenation program')
+        self.parser = argparse.ArgumentParser(description='Basic concatenation program',  epilog="Developed by Paul Pidou. More information and examples on https://github.com/PaulPidou/Session-generator")
 
         self.parser.add_argument('-F', action="store", dest="source", help="File(s) to concatenate.", nargs='+')
         self.parser.add_argument('-t', action="store", dest="text", help="Text(s) to concatenate.", nargs='+')
