@@ -13,7 +13,7 @@ class Concatenator():
 
         self.parser.add_argument('-F', action="store", dest="source", help="File(s) to concatenate.", nargs='+')
         self.parser.add_argument('-t', action="store", dest="text", help="Text(s) to concatenate.", nargs='+')
-        self.parser.add_argument('-o', action="store", dest="order", help="Set the order. Type 'text' and 'file' in the order you want. By default the texts is after the files.", nargs='+')
+        self.parser.add_argument('-o', action="store", dest="order", help="Set the order. Type 'text' and 'file' in the order you want. By default the text(s) is/are after the file(s).", nargs='+')
         self.parser.add_argument('-s', action="store", dest="destination", help="File to save the output.", nargs=1)
 
         self.parser.add_argument('--version', action='version', version='%(prog)s 1.0')
