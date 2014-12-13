@@ -19,7 +19,7 @@ optional arguments:
   -t TEXT [TEXT ...]    Text(s) to encode
   -T TIME [TIME ...]    Time(s) to encode, format -> d/m/y h:min:s Or type
                         'current' to use the current time
-  -d DURATION           Duration after the start time in minutes.
+  -d DURATION           Duration after the time(s) in minutes.
   -e ENCODING [ENCODING ...]
                         Enconding wished. Currently support : 'base64', 'md5',
                         'sha1', 'sha224', 'sha256', 'sha384', 'sha512'. Type
