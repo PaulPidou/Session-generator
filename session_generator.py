@@ -114,6 +114,10 @@ class SessionGenerator():
                     f.close()
                 except:
                     self.displayError("No such file or directory: " + file + "\n")
+
+        # Check for save and cookie-friendly alone
+        if (self.flags[4] or self.flags[5]) and not (self.flags[0] or self.flags[1] or self.flags[6]):
+            self.displayError("Please enter an input !\n")
         
 	# Save or display the output
 	if self.flags[5]:

@@ -46,13 +46,22 @@ class Concatenator():
 
     def main(self):
         "Main function"
-        concatenateText, concatenateList, filesList, tempList = "", [], [], []
+        concatenateInput, concatenateList, filesList, tempList = [], [], [], []
         outputLength, filesSize, nbFiles, lineIt = 1, [], len(self.file) + len(self.text), []
-        j = 0
+        j, iText, iFile = 0, 0, 0
 
         # Check if there is at least two entries to concatenate
         if len(self.text) + len(self.file) < 2:
             self.displayError('At least two entries are required.\n')
+
+        # Check the order
+        if self.flags[2]:
+            if not (self.flags[0] and self.flags[1]):
+                self.displayError("To use '-o' you have to use text(s) and file(s).\n")
+            elif len(self.order) != self.order.count('text') + self.order.count('file'):
+                self.displayError("Only type 'text' or 'file' to set the order.\n")
+            elif self.order.count('text') != len(self.text) or self.order.count('file') != len(self.file):
+                self.displayError("You have to type as many order ('text' or 'file') as input.\n")
         
         # Copy
         for file in self.file:
@@ -67,15 +76,25 @@ class Concatenator():
                 self.displayError("No such file or directory: " + file + "\n")
 
         # Add texts to filesList
-        for text in self.text:
-            tempList[:] = []
-            tempList.append(str(text))
-            filesList.append(list(tempList))
-
-        print filesList
+        if self.flags[2]:
+            for order in self.order:
+                tempList[:] = []
+                if order == 'text':
+                    tempList.append(str(self.text[iText]))
+                    concatenateInput.append(list(tempList))
+                    iText += 1
+                else:
+                    concatenateInput.append(filesList[iFile])
+                    iFile += 1
+        else:
+            concatenateInput = list(filesList)
+            for text in self.text:
+                tempList[:] = []
+                tempList.append(str(text))
+                concatenateInput.append(list(tempList))
                 
         # Calculation of the length of the lists
-        for fileList in filesList:
+        for fileList in concatenateInput:
             filesSize.append(len(fileList))
         for size in filesSize:
             outputLength *= size
@@ -91,12 +110,12 @@ class Concatenator():
         for n in range(nbFiles):
             for i in range(outputLength):
                 if i%lineIt[n] == 0:
-                    concatenateList[i] += filesList[n][j]
+                    concatenateList[i] += concatenateInput[n][j]
                     j += 1
                     if j == filesSize[n]:
                         j = 0
                 else:
-                    concatenateList[i] += filesList[n][j]
+                    concatenateList[i] += concatenateInput[n][j]
 
         # Save or display the output
 	if self.flags[3]:
