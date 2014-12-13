@@ -1,6 +1,6 @@
 # Basic session generator and 'concatenator'
 
-Use this sofware to hash and concate automatically large files
+Use these scripts to hash and concate automatically large files
 
 ## Session generator
 
