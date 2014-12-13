@@ -75,7 +75,7 @@ optional arguments:
                         File(s) to concatenate.
   -t TEXT [TEXT ...]    Text(s) to concatenate.
   -o ORDER [ORDER ...]  Set the order. Type 'text' and 'file' in the order you
-                        want. By default the texts is after the files.
+                        want. By default the text(s) is/are after the file(s).
   -s DESTINATION        File to save the output.
   --version             show program's version number and exit
 ```
