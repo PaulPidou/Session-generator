@@ -18,7 +18,7 @@ class SessionGenerator():
         self.parser.add_argument('-F', action="store", dest="file", help="File(s) to encode.", nargs='+') 
         self.parser.add_argument('-t', action="store", dest="text", help="Text(s) to encode", nargs='+')
         self.parser.add_argument('-T', action="store", dest="time", help="Time(s) to encode, format -> d/m/y h:min:s Or type 'current' to use the current time", nargs='+')
-        self.parser.add_argument('-d', action="store", dest="duration", help="Duration after the start time in minutes.", type=int, nargs=1)
+        self.parser.add_argument('-d', action="store", dest="duration", help="Duration after the time(s) in minutes.", type=int, nargs=1)
         self.parser.add_argument('-e', action="store", dest="encoding", help="Enconding wished. Currently support : 'base64', 'md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512'. Type 'all' to use them all this order. By default : None", nargs='+')
         self.parser.add_argument('-cf', action="store_true", default=False, dest="cookie_friendly", help="The output will be cookie friendly.") 
         self.parser.add_argument('-s', action="store", dest="destination", help="File to save the output", nargs=1)
