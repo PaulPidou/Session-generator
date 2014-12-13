@@ -5,7 +5,7 @@ import sys, argparse
 class Concatenator():
     "Concatenate the entries"
     def __init__(self):
-        self.text, self.file, self.destination = [], [], ""
+        self.text, self.file, self.destination, self.order = [], [], "", []
         self.flags = [False, False, False, False] # Text, File, Order, Save
 
         #Parser initialisation
@@ -13,7 +13,7 @@ class Concatenator():
 
         self.parser.add_argument('-F', action="store", dest="source", help="File(s) to concatenate.", nargs='+')
         self.parser.add_argument('-t', action="store", dest="text", help="Text(s) to concatenate.", nargs='+')
-        self.parser.add_argument('-o', action="store_true", default=False, dest="order", help="Set the order. By default : 'text' before 'file'.")
+        self.parser.add_argument('-o', action="store", dest="order", help="Set the order. Type 'text' and 'file' in the order you want. By default the texts is after the files.", nargs='+')
         self.parser.add_argument('-s', action="store", dest="destination", help="File to save the output.", nargs=1)
 
         self.parser.add_argument('--version', action='version', version='%(prog)s 1.0')
@@ -35,69 +35,68 @@ class Concatenator():
         if args.source != None:
             self.file = list(args.source)
             self.flags[1] = True
+        if args.order != None:
+            self.order = list(args.order)
+            self.flags[2] = True
         if args.destination != None:
             self.destination = args.destination[0]
             self.flags[3] = True
-
-        self.flags[2] = args.order
 
         self.main()
 
     def main(self):
         "Main function"
         concatenateText, concatenateList, filesList, tempList = "", [], [], []
-        outputLength, filesSize, nbFiles, lineIt = 1, [], len(self.file), []
+        outputLength, filesSize, nbFiles, lineIt = 1, [], len(self.file) + len(self.text), []
         j = 0
 
         # Check if there is at least two entries to concatenate
         if len(self.text) + len(self.file) < 2:
             self.displayError('At least two entries are required.\n')
-        else:
-            # Only texts
-            if self.flags[0] and not self.flags[1]:
-                for text in self.text:
-                    concatenateText += str(text)
-                concatenateList.append(concatenateText)
+        
+        # Copy
+        for file in self.file:
+            tempList[:] = []
+            try:
+                f = open(file, 'r')
+                for line in f:
+                    tempList.append(str(line).strip('\n'))
+                f.close()
+                filesList.append(list(tempList))
+            except:
+                self.displayError("No such file or directory: " + file + "\n")
 
-            # Only files
-            elif self.flags[1] and not self.flags[0]:
-                # Copy
-                for file in self.file:
-                    tempList[:] = []
-                    try:
-                        f = open(file, 'r')
-                        for line in f:
-                            tempList.append(str(line).strip('\n'))
-                        f.close()
-                        filesList.append(list(tempList))
-                    except:
-                        self.displayError("No such file or directory: " + file + "\n")
+        # Add texts to filesList
+        for text in self.text:
+            tempList[:] = []
+            tempList.append(str(text))
+            filesList.append(list(tempList))
+
+        print filesList
                 
-                # Calculation of the length of the lists
-                for fileList in filesList:
-                    filesSize.append(len(fileList))
-                for size in filesSize:
-                    outputLength *= size
+        # Calculation of the length of the lists
+        for fileList in filesList:
+            filesSize.append(len(fileList))
+        for size in filesSize:
+            outputLength *= size
 
-                for index in range(nbFiles):
-                    lineIt.append(self.nbCall(filesSize, index))
+        for index in range(nbFiles):
+            lineIt.append(self.nbCall(filesSize, index))
 
-                # Initialisation of the output
-                for i in range(outputLength):
-                    concatenateList.append("")
+        # Initialisation of the output
+        for i in range(outputLength):
+            concatenateList.append("")
 
-                 # Concatenation                   
-                for n in range(nbFiles):
-                    for i in range(outputLength):
-                        if i%lineIt[n] == 0:
-                            concatenateList[i] += filesList[n][j]
-                            j += 1
-
-                            if j == filesSize[n]:
-                                j = 0
-                        else:
-                            concatenateList[i] += filesList[n][j]
-
+        # Concatenation                   
+        for n in range(nbFiles):
+            for i in range(outputLength):
+                if i%lineIt[n] == 0:
+                    concatenateList[i] += filesList[n][j]
+                    j += 1
+                    if j == filesSize[n]:
+                        j = 0
+                else:
+                    concatenateList[i] += filesList[n][j]
 
         # Save or display the output
 	if self.flags[3]:
