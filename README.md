@@ -89,7 +89,7 @@ test1test2
 ```
 
 ```
-ython concatenator.py -F test -t string1 string2 -o text file text
+python concatenator.py -F test -t string1 string2 -o text file text
 
 string11astring2
 string11bstring2
