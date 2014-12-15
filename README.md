@@ -16,7 +16,7 @@ Basic session generator
 optional arguments:
   -h, --help            show this help message and exit
   -F FILE [FILE ...]    File(s) to encode.
-  -t TEXT [TEXT ...]    Text(s) to encode
+  -t TEXT [TEXT ...]    Text(s) to encode.
   -T TIME [TIME ...]    Time(s) to encode, format -> d/m/y h:min:s Or type
                         'current' to use the current time
   -d DURATION           Duration after the time(s) in minutes.
