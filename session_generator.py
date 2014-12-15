@@ -16,7 +16,7 @@ class SessionGenerator():
         self.parser = argparse.ArgumentParser(description='Basic session generator', epilog="Developed by Paul Pidou. More information and examples on https://github.com/PaulPidou/Session-generator")
 
         self.parser.add_argument('-F', action="store", dest="file", help="File(s) to encode.", nargs='+') 
-        self.parser.add_argument('-t', action="store", dest="text", help="Text(s) to encode", nargs='+')
+        self.parser.add_argument('-t', action="store", dest="text", help="Text(s) to encode.", nargs='+')
         self.parser.add_argument('-T', action="store", dest="time", help="Time(s) to encode, format -> d/m/y h:min:s Or type 'current' to use the current time", nargs='+')
         self.parser.add_argument('-d', action="store", dest="duration", help="Duration after the time(s) in minutes.", type=int, nargs=1)
         self.parser.add_argument('-e', action="store", dest="encoding", help="Enconding wished. Currently support : 'base64', 'md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512'. Type 'all' to use them all this order. By default : None", nargs='+')
