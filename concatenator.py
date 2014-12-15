@@ -132,16 +132,19 @@ class Concatenator():
 
 
     def saveOutput(self, textList_hash):
-        myFile = open(self.destination, "w")
-        for text in textList_hash:
-            myFile.write(str(text))
-            myFile.write('\n')
-        myFile.close()
+    	try:
+	        myFile = open(self.destination, "w")
+	        for text in textList_hash:
+	            myFile.write(str(text))
+	            myFile.write('\n')
+	        myFile.close()
+	    except:
+	    	self.displayError('An error occurred while saving the file.\n')
 
     def displayError(self, error):
-	print error
-	self.parser.print_help()
-	sys.exit()	
+		print error
+		self.parser.print_help()
+		sys.exit()	
 
 # Programme de test
 if __name__ == "__main__":
