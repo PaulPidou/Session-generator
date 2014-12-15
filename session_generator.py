@@ -202,12 +202,14 @@ class SessionGenerator():
 	return timeList    
 
     def saveOutput(self, textList_hash):
-        myFile = open(self.destination, "w")
-        for textList in textList_hash:
-            for text in textList:
-                myFile.write(str(text))
-                myFile.write('\n')
-        myFile.close()
+    	try:
+	    myFile = open(self.destination, "w")
+	    for text in textList_hash:
+	        myFile.write(str(text))
+	        myFile.write('\n')
+	    myFile.close()
+	except:
+	    self.displayError('An error occurred while saving the file.\n')
 
     def displayError(self, error):
 	print error
